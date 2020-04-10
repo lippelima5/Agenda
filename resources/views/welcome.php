@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="utf-8">
@@ -14,16 +14,17 @@
 </head>
 
 <body class="text-center">
-    <form class="form-signin">
+    <form class="form-signin" method="post" action="api/logar">
+      
         <img class="mb-4" src="https://hosuldeminas.com.br/wp-content/uploads/2020/03/cropped-LOGO-OFICIAL-HO.png" alt="HOSPITAL DE OLHOS SUL DE MINAS LOGO" width="250" height="140">
         <h1 class="h3 mb-3 font-weight-normal">Acesso a agenda</h1>
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-        <label for="inputPassword" class="sr-only">Senha</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required>
-        
+        <label for="email" class="sr-only">Email</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required autofocus>
+        <label for="senha" class="sr-only">Senha</label>
+        <input type="password" name="senha" id="senha" class="form-control" placeholder="Senha" required>
+
         <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
-        <p class="mt-5 mb-3 text-muted">&copy; Felippe Lima - <strong ><a href="https://markwareco.com">Markware</a></strong> - 2019-2021</p>
+        <p class="mt-5 mb-3 text-muted">&copy; Felippe Lima - <strong><a href="https://markwareco.com">Markware</a></strong> - 2019-2021</p>
     </form>
 </body>
 <footer>
@@ -67,7 +68,7 @@
         }
 
         .form-signin input[type="email"] {
-            margin-bottom: -1px;
+            margin-bottom: 10px;
             border-bottom-right-radius: 0;
             border-bottom-left-radius: 0;
         }

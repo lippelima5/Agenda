@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Agenda;
+use App\Colaboradores;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,6 @@ class AgendaController extends Controller
 {
     public function getAll()
     {
-
         $agenda = DB::table('agenda')
             ->join('colaboradores', 'colaboradores.c_id', '=', 'agenda.x_colaborador_id')
             ->select(
@@ -26,16 +26,20 @@ class AgendaController extends Controller
                 'colaboradores.c_nome_completo as nome',
                 'colaboradores.c_email as email',
                 'colaboradores.c_tipo as tipo'
-            )           
+            )
             ->get();
 
-            $users = DB::table('agenda')->count();
 
         return response()->json($agenda, 200);
     }
 
-    public function getExclusive($id)
+    public function getDay($data)
     {
+        if (!isset($data)) {
+            return response()->json([
+                "message" => "Data inválida"
+            ], 400);
+        }
 
         $agenda = DB::table('agenda')
             ->join('colaboradores', 'colaboradores.c_id', '=', 'agenda.x_colaborador_id')
@@ -52,7 +56,7 @@ class AgendaController extends Controller
                 'colaboradores.c_email as email',
                 'colaboradores.c_tipo as tipo'
             )
-            ->where('colaboradores.c_id', '=', $id)
+            ->where('x_data', '=', $data)
             ->get();
 
         return response()->json($agenda, 200);
@@ -60,14 +64,15 @@ class AgendaController extends Controller
 
     public function cadastrar(Request $request)
     {
-        $dados = $request->json()->all();
-        $id_colaborador = $request->header('id');
+        $dados = $request->input();
+        $id_colaborador = $dados['id'];
         $data = $dados['data'];
         $unidade = $dados['unidade'];
         $periodos = $dados['periodos'];
         $cidade = $dados['cidade'];
         $procedimento = $dados['procedimento'];
-        $obs = $dados['obs'];
+        $obs = '' . $dados['obs'] . '';
+
 
         $ageda = new Agenda();
         $ageda->x_data = $data;
@@ -86,8 +91,17 @@ class AgendaController extends Controller
         ], 201);
     }
 
-    public function deletar($id)
+    public function deletar(Request $request, $id)
     {
+
+        $tipo = $request->session()->get('tipo');
+
+        if ($tipo === 1 || $tipo === 2) {
+            return response()->json([
+                'message' => "Você não tem autorização para acessar essa página",
+            ], 401);
+        }
+
         if (Agenda::where('x_id', $id)->exists()) {
             $deletados = Agenda::where('x_id', $id)->delete();
 
@@ -97,7 +111,7 @@ class AgendaController extends Controller
         } else {
             return response()->json([
                 "message" => "Falha ao deletar evento"
-                
+
             ], 404);
         }
     }
